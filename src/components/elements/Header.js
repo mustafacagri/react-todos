@@ -15,13 +15,14 @@ function Header() {
   const [value, setValue] = useState(0)
 
   return (
-    <Box>
+    <Box >
       <BottomNavigation
         showLabels
         value={value}
         onChange={(event, newValue) => {
           setValue(newValue)
         }}
+				sx={{backgroundColor: "#E7EBF0"}}
       >
         <BottomNavigationAction label="All Todos" icon={<HomeIcon />} />
         <BottomNavigationAction label="Open To-Dos" icon={<TopicIcon />} />

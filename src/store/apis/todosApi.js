@@ -1,9 +1,22 @@
 import { createApi, fetchBaseQuery } from '@reduxjs/toolkit/query/react'
 
+// DEV ONLY!!!
+const pause = duration => {
+  return new Promise(resolve => {
+    setTimeout(resolve, duration)
+  })
+}
+
 const todosApi = createApi({
   reducerPath: 'todos',
   baseQuery: fetchBaseQuery({
-    baseUrl: 'http://localhost:3015'
+    baseUrl: 'http://localhost:3015',
+    fetchFn: async (...args) => {
+      // REMOVE FOR PRODUCTION
+      await pause(0)
+
+      return fetch(...args)
+    }
   }),
   endpoints(builder) {
     return {
@@ -12,14 +25,17 @@ const todosApi = createApi({
           let tags = []
 
           if (todo.parent === 0) {
+            console.warn('parennttttt!!!!!!')
             tags.push({ type: 'Todos' })
           } else {
             tags.push({ type: 'Todo', id: todo.parent })
           }
+
+          console.warn(tags, 'tags')
           return tags
         },
         query: todo => {
-          const { title, duedate, status, priority, description } = todo
+          const { title, deadline, status, priority, description } = todo
           const now = new Date()
           const createdTime = now.getTime()
           let { parent = 0 } = todo
@@ -27,14 +43,22 @@ const todosApi = createApi({
           return {
             url: '/todos',
             method: 'POST',
-            body: { title, duedate, status, parent, createdTime, priority, description }
+            body: { title, deadline, status, parent, createdTime, priority, description }
           }
         }
       }),
       removeTodo: builder.mutation({}),
       fetchTodos: builder.query({
-        provideTags: (result, error, todo) => {
-          return [{ type: 'Todos' }, { type: 'Todo', id: todo.id }]
+        providesTags: (result, error, todo) => {
+          return [{ type: 'Todos' }]
+          // return [{ type: 'Todos' }, { type: 'Todo', id: todo.id }]
+        },
+        query: () => {
+          return {
+            url: '/todos',
+            params: {},
+            method: 'GET'
+          }
         }
       })
     }

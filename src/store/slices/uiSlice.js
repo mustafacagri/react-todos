@@ -18,6 +18,6 @@ export const uiSlice = createSlice({
   }
 })
 
-export const { openTodoModal, closeTodoModal } = uiSlice.actions
+export const { getPrioritiesById, openTodoModal, closeTodoModal } = uiSlice.actions
 
 export default uiSlice.reducer
