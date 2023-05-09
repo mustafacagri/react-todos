@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import Button from '../utils/Button'
 import TextField from '@mui/material/TextField'
 import Dialog from '@mui/material/Dialog'
@@ -10,13 +10,14 @@ import { MenuItem } from '@mui/material/'
 import { DatePicker } from '@mui/x-date-pickers/DatePicker'
 import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
-import { closeTodoModal } from '../../store/slices/uiSlice'
+import { setTodo, closeTodoModal } from '../../store/slices/uiSlice'
 import { useState } from 'react'
 import { useAddTodoMutation } from '../../store/apis/todosApi'
 import Alert from '@mui/material/Alert'
 
-
 function TodoForm() {
+  const initialTodoState = useSelector(state => state.ui.initialTodoState)
+  const stateTodo = useSelector(state => state.ui.todo)
   const [addTodo, results] = useAddTodoMutation()
   const dispatch = useDispatch()
   const handleClose = () => dispatch(closeTodoModal())
@@ -24,14 +25,26 @@ function TodoForm() {
   const isTodoModal = useSelector(state => state.ui.isTodoModal)
   const statuses = useSelector(state => state.ui.statuses)
   const priorities = useSelector(state => state.ui.priorities)
-  
-	const [formResult, setFormResult] = useState({})
 
-  const initialTodoState = { parent: 0, title: '', priority: '', status: '', description: '', deadline: '' }
+  const [formResult, setFormResult] = useState({})
 
-  const [todoData, setTodoData] = useState({
-    ...initialTodoState
-  })
+  const up = () => {
+    return { ...stateTodo }
+  }
+
+  useEffect(() => {
+    // Update the document title using the browser API
+    console.warn('useEffect', stateTodo)
+		if (stateTodo) {
+			const todo = {...stateTodo}
+			console.info(todo, 'todo 41')
+			// todo.deadline = new Date(todo.deadline)
+			delete todo.deadline
+			setTodoData({...todo})
+		}
+  }, [stateTodo])
+
+  const [todoData, setTodoData] = useState(stateTodo ? up() : { ...initialTodoState })
 
   const handleChange = event => {
     setTodoData({ ...todoData, [event.target.name]: event.target.value })
@@ -47,7 +60,7 @@ function TodoForm() {
         todoData[key] = value.$d.getTime()
       }
 
-			console.warn(key, value, 48, !value)
+      console.warn(key, value, 48, !value)
 
       if (value === '') {
         console.info(value, key)
@@ -55,13 +68,15 @@ function TodoForm() {
         break
       }
 
-			setFormResult({ message: null, isSuccess: true, notValidatedKey: null })
+      setFormResult({ message: null, isSuccess: true, notValidatedKey: null })
+      dispatch(setTodo(null))
     }
 
     if (todoData.title && todoData.deadline && todoData.status && todoData.priority && todoData.description) {
       addTodo(todoData).then(res => {
         if (res?.data) {
           setTodoData(initialTodoState) // clear the form
+          dispatch(setTodo(null))
           handleClose()
         } else {
           console.info(res, 'res')
@@ -74,11 +89,15 @@ function TodoForm() {
     <Dialog open={isTodoModal} onClose={handleClose}>
       <DialogTitle>Create / Update Todo</DialogTitle>
       <DialogContent>
-          {formResult.isSuccess === false && (
-            <Alert severity="error" sx={{ my: 2 }}>
-              {formResult.message}
-            </Alert>
-          )}
+        <span>{JSON.stringify(stateTodo)}</span>
+        <hr />
+        <span>{JSON.stringify(todoData)}</span>
+
+        {formResult.isSuccess === false && (
+          <Alert severity="error" sx={{ my: 2 }}>
+            {formResult.message}
+          </Alert>
+        )}
         <DialogContentText>
           "To create a new todo, simply fill out the form below with the details of your task. We've included fields for
           the task title, due date, priority level, and any additional notes you may want to add. Once you've entered

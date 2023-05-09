@@ -3,13 +3,11 @@ import { useFetchTodosQuery } from '../../store/apis/todosApi'
 import { Box, Grid, Skeleton } from '@mui/material'
 import Todo from '../Todo'
 import { makeStyles } from  '@mui/styles'
-import { useEffect, useState } from 'react'
 
 export default function Home() {
 const useStyles = makeStyles(theme => ({
     root: {
         flexGrow: 1,
-        padding: theme.spacing(2)
     }
 }))
 
