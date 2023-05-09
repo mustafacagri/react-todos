@@ -33,13 +33,9 @@ function TodoForm() {
   }
 
   useEffect(() => {
-    // Update the document title using the browser API
-    console.warn('useEffect', stateTodo)
 		if (stateTodo) {
 			const todo = {...stateTodo}
-			console.info(todo, 'todo 41')
-			// todo.deadline = new Date(todo.deadline)
-			delete todo.deadline
+			todo.deadline = dayjs(todo.deadline)
 			setTodoData({...todo})
 		}
   }, [stateTodo])
