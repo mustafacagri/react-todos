@@ -47,6 +47,30 @@ const todosApi = createApi({
           }
         }
       }),
+      updateTodo: builder.mutation({
+        invalidatesTags: (result, error, todo) => {
+          let tags = []
+
+          if (todo.parent === 0) {
+            tags.push({ type: 'Todos' })
+          } else {
+            tags.push({ type: 'Todo', id: todo.parent })
+          }
+
+          return tags
+        },
+        query: todo => {
+          const { title, deadline, status, priority, description, id, parent } = todo
+
+          console.warn({ id, title, deadline, status, priority, description, parent }, 'datalaaar')
+
+          return {
+            url: `/todos/${id}`,
+            method: 'PUT',
+            body: { id, title, deadline, status, priority, description, parent }
+          }
+        }
+      }),
       removeTodo: builder.mutation({}),
       fetchTodos: builder.query({
         providesTags: (result, error, todo) => {
@@ -65,6 +89,6 @@ const todosApi = createApi({
   }
 })
 
-export const { useFetchTodosQuery, useAddTodoMutation, useRemoveTodoMutation } = todosApi
+export const { useFetchTodosQuery, useAddTodoMutation, useRemoveTodoMutation, useUpdateTodoMutation } = todosApi
 
 export { todosApi }

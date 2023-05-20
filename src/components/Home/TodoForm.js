@@ -12,13 +12,14 @@ import dayjs from 'dayjs'
 import { useSelector, useDispatch } from 'react-redux'
 import { setTodo, closeTodoModal } from '../../store/slices/uiSlice'
 import { useState } from 'react'
-import { useAddTodoMutation } from '../../store/apis/todosApi'
+import { useAddTodoMutation, useUpdateTodoMutation } from '../../store/apis/todosApi'
 import Alert from '@mui/material/Alert'
 
 function TodoForm() {
   const initialTodoState = useSelector(state => state.ui.initialTodoState)
   const stateTodo = useSelector(state => state.ui.todo)
-  const [addTodo, results] = useAddTodoMutation()
+  const [addTodo, addResults] = useAddTodoMutation()
+  const [updateTodo, updateResults] = useUpdateTodoMutation()
   const dispatch = useDispatch()
   const handleClose = () => dispatch(closeTodoModal())
 
@@ -33,11 +34,11 @@ function TodoForm() {
   }
 
   useEffect(() => {
-		if (stateTodo) {
-			const todo = {...stateTodo}
-			todo.deadline = dayjs(todo.deadline)
-			setTodoData({...todo})
-		}
+    if (stateTodo) {
+      const todo = { ...stateTodo }
+      todo.deadline = dayjs(todo.deadline)
+      setTodoData({ ...todo })
+    }
   }, [stateTodo])
 
   const [todoData, setTodoData] = useState(stateTodo ? up() : { ...initialTodoState })
@@ -69,15 +70,27 @@ function TodoForm() {
     }
 
     if (todoData.title && todoData.deadline && todoData.status && todoData.priority && todoData.description) {
-      addTodo(todoData).then(res => {
-        if (res?.data) {
-          setTodoData(initialTodoState) // clear the form
-          dispatch(setTodo(null))
-          handleClose()
-        } else {
-          console.info(res, 'res')
-        }
-      })
+      if (todoData.id) {
+        updateTodo(todoData).then(res => {
+          if (res?.data) {
+            setTodoData(initialTodoState) // clear the form
+            dispatch(setTodo(null))
+            handleClose()
+          } else {
+            console.info(res, 'res')
+          }
+        })
+      } else {
+        addTodo(todoData).then(res => {
+          if (res?.data) {
+            setTodoData(initialTodoState) // clear the form
+            dispatch(setTodo(null))
+            handleClose()
+          } else {
+            console.info(res, 'res')
+          }
+        })
+      }
     }
   }
 
@@ -85,10 +98,6 @@ function TodoForm() {
     <Dialog open={isTodoModal} onClose={handleClose}>
       <DialogTitle>Create / Update Todo</DialogTitle>
       <DialogContent>
-        <span>{JSON.stringify(stateTodo)}</span>
-        <hr />
-        <span>{JSON.stringify(todoData)}</span>
-
         {formResult.isSuccess === false && (
           <Alert severity="error" sx={{ my: 2 }}>
             {formResult.message}
@@ -178,7 +187,7 @@ function TodoForm() {
           Cancel
         </Button>
 
-        <Button color="success" loading={results.isLoading} onClick={handleSave}>
+        <Button color="success" loading={addResults.isLoading || updateResults.isLoading} onClick={handleSave}>
           Save
         </Button>
       </DialogActions>

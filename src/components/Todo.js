@@ -23,9 +23,10 @@ function Todo({ todo }) {
   return (
     <>
       <Card>
-        <CardHeader title={todo?.title} subheader={subheader} onClick={() => editTodo()} />
         <CardContent>
-          <label>{todo?.description}</label>
+          <h3 onClick={() => editTodo()} >{todo?.title}</h3>
+          <p>{subheader}</p>
+          <p>{todo?.description}</p>
           <span>{deadline}</span>
         </CardContent>
       </Card>

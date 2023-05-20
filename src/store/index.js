@@ -15,4 +15,4 @@ export const store = configureStore({
 
 setupListeners(store.dispatch)
 
-export { useFetchTodosQuery, useAddTodoMutation, useRemoveTodoMutation } from './apis/todosApi'
+export { useFetchTodosQuery, useAddTodoMutation, useRemoveTodoMutation, useUpdateTodoMutation } from './apis/todosApi'
