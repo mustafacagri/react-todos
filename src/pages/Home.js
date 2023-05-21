@@ -1,5 +1,3 @@
-import Header from '../components/elements/Header'
-import Footer from '../components/elements/Footer'
 import Home from '../components/Home/Index'
 import GlobalStyles from "@mui/material/GlobalStyles";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -21,9 +19,7 @@ function home() {
           body: { backgroundColor: "#fafafa" }
         }}
       />
-      <Header />
       <Home sx={{width: 300}} />
-      <Footer />
     </ThemeProvider>
       
   )

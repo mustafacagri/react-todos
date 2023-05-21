@@ -2,7 +2,8 @@ import { useState } from 'react'
 import Box from '@mui/material/Box'
 import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
-import { Close, ControlPoint, Home, Pending, Task, Topic } from '@mui/icons-material'
+import { Close, ControlPoint, Home, Info, Pending, Task, Topic } from '@mui/icons-material'
+import { Link } from 'react-router-dom'
 
 import { useDispatch } from 'react-redux'
 import { openTodoModal, setStatusFilter } from '../../store/slices/uiSlice'
@@ -47,6 +48,7 @@ function Header() {
           icon={<ControlPoint />}
           onClick={() => dispatch(openTodoModal())}
         />
+        <BottomNavigationAction icon={<Info />} label={<Link to="/about">About</Link>} />
       </BottomNavigation>
     </Box>
   )

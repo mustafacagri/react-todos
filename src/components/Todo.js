@@ -1,5 +1,5 @@
 import React from 'react'
-import { Card, CardContent, CardHeader } from '@mui/material'
+import { Card, CardContent } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { setTodo, openTodoModal } from '../store/slices/uiSlice'
