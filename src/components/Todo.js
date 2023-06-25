@@ -3,6 +3,8 @@ import { Card, CardContent } from '@mui/material'
 import { useSelector } from 'react-redux'
 import { useDispatch } from 'react-redux'
 import { setTodo, openTodoModal } from '../store/slices/uiSlice'
+import { Close, Edit } from '@mui/icons-material'
+import IconButton from '@material-ui/core/IconButton'
 
 function Todo({ todo }) {
   const dispatch = useDispatch()
@@ -19,12 +21,28 @@ function Todo({ todo }) {
     const d = new Date(todo.deadline)
     deadline = d.toLocaleDateString()
   }
+
   const subheader = `${priority} / ${todo?.status}`
+
+  const styles = {
+    smallIcon: {
+      fontSize: 16,
+      marginLeft: 5,
+      cursor: 'pointer'
+    },
+    h3: { textOverflow: 'ellipsis', whiteSpace: 'nowrap', overflow: 'hidden' }
+  }
   return (
     <>
       <Card>
         <CardContent>
-          <h3 onClick={() => editTodo()} >{todo?.title}</h3>
+          <h3 style={styles.h3}>{todo?.title}</h3>
+          <span onClick={() => editTodo()}>
+            <Edit style={styles.smallIcon} />
+          </span>
+          <span>
+            <Close style={styles.smallIcon} />
+          </span>
           <p>{subheader}</p>
           <p>{todo?.description}</p>
           <span>{deadline}</span>

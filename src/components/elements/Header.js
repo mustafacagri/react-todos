@@ -3,7 +3,7 @@ import Box from '@mui/material/Box'
 import BottomNavigation from '@mui/material/BottomNavigation'
 import BottomNavigationAction from '@mui/material/BottomNavigationAction'
 import { Close, ControlPoint, Home, Info, Pending, Task, Topic } from '@mui/icons-material'
-import { Link, useNavigate } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
 
 import { useDispatch } from 'react-redux'
 import { openTodoModal, setStatusFilter } from '../../store/slices/uiSlice'
