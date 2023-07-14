@@ -36,13 +36,13 @@ function Todo({ todo }) {
     <>
       <Card>
         <CardContent>
-          <h3 style={styles.h3}>{todo?.title}</h3>
           <span onClick={() => editTodo()}>
             <Edit style={styles.smallIcon} />
           </span>
           <span>
             <Close style={styles.smallIcon} />
           </span>
+          <h3 style={styles.h3}>{todo?.title}</h3>
           <p>{subheader}</p>
           <p>{todo?.description}</p>
           <span>{deadline}</span>
